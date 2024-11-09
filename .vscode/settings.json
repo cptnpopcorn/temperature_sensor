@@ -5,5 +5,10 @@
     "board/esp32c6-builtin.cfg"
   ],
   "idf.portWin": "COM5",
-  "idf.flashType": "UART"
+  "idf.flashType": "UART",
+  "files.associations": {
+    "sht4x_i2c.h": "c",
+    "ostream": "cpp",
+    "sensirion_i2c_esp32_config.h": "c"
+  }
 }
