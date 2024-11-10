@@ -243,7 +243,6 @@
         "connect_to_instance",
         "-t",
         "xtensa-esp32-elf-"
-
       ],
       "windows": {
         "command": "${config:idf.pythonBinPathWin}",

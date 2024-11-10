@@ -9,6 +9,14 @@
   "files.associations": {
     "sht4x_i2c.h": "c",
     "ostream": "cpp",
-    "sensirion_i2c_esp32_config.h": "c"
+    "sensirion_i2c_esp32_config.h": "c",
+    "stdexcept": "cpp",
+    "system_error": "cpp",
+    "*.tcc": "cpp",
+    "chrono": "cpp",
+    "format": "cpp",
+    "future": "cpp",
+    "type_traits": "cpp",
+    "variant": "cpp"
   }
 }

@@ -1,40 +1,36 @@
-#include <iostream>
-#include <cstdint>
-#include <system_error>
+#include "app.h"
 
-#include <sdkconfig.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
+#include <driver/usb_serial_jtag.h>
 #include <esp_log.h>
 #include <esp_system.h>
-#include <sht4x.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
-void run();
-
-extern "C"
-{
-    void app_main(void)
-    {
-        run();
-    }
-}
+#include <iostream>
+#include <stdexcept>
 
 using namespace std;
-
 const char *tag = "app";
 
-void run()
-{
-    ESP_LOGI(tag, "temperature sensor app starting...");
+extern "C" {
+void app_main(void) {
+  ESP_LOGI(tag, "temperature sensor app starting...");
 
-    ESP_ERROR_CHECK(i2cdev_init());
-    sht4x_t dev{};
-    ESP_ERROR_CHECK(sht4x_init_desc(&dev, I2C_NUM_0, GPIO_NUM_19, GPIO_NUM_20));
-    ESP_ERROR_CHECK(sht4x_init(&dev));
+  if (usb_serial_jtag_is_connected())
+    ESP_LOGI(tag, "board is connected via USB");
 
-    float temperature;
-    float humidity;
-    ESP_ERROR_CHECK(sht4x_measure(&dev, &temperature, &humidity));
+  try {
+    app{I2C_NUM_0, GPIO_NUM_19, GPIO_NUM_20}.run();
+  } catch (const exception &e) {
+    ESP_LOGE(tag, "%s", e.what());
+  }
+}
+}
 
-    cout << temperature << " °C " << humidity << " %" << endl;
+app::app(i2c_port_t port, gpio_num_t sda, gpio_num_t scl)
+    : sensor{port, sda, scl} {}
+
+void app::run() {
+  cout << sensor.measure() << endl;
+  cout.flush();
 }
