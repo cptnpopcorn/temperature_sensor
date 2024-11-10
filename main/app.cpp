@@ -9,6 +9,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "../config.h"
+
 using namespace std;
 const char *tag = "app";
 
@@ -20,7 +22,7 @@ void app_main(void) {
     ESP_LOGI(tag, "board is connected via USB");
 
   try {
-    app{I2C_NUM_0, GPIO_NUM_19, GPIO_NUM_20}.run();
+    app{I2C_NUM_0, SDA_PIN, SCL_PIN}.run();
   } catch (const exception &e) {
     ESP_LOGE(tag, "%s", e.what());
   }
