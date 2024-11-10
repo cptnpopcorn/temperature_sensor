@@ -1,6 +1,7 @@
 #ifndef B3C11C8D_4E28_41F5_956E_A7ABD223F8B3
 #define B3C11C8D_4E28_41F5_956E_A7ABD223F8B3
 
+#include <nvs_access.h>
 #include <sht.h>
 
 class app final {
@@ -12,5 +13,6 @@ class app final {
 
  private:
   sht sensor;
+  nvs_access nvs;
 };
 #endif /* B3C11C8D_4E28_41F5_956E_A7ABD223F8B3 */
