@@ -1,2 +1,2 @@
-idf_component_register(SRCS "app_main.cpp" "app.cpp"
+idf_component_register(SRCS "scan_console_monitor.cpp" "app_main.cpp" "app.cpp"
     INCLUDE_DIRS "")

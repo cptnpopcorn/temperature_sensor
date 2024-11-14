@@ -4,6 +4,10 @@
 #include <esp_wifi.h>
 #include <guard.h>
 
+#include <string>
+
+using namespace std;
+
 wifi_station::wifi_station(event_loop&, nvs_access&) : interface{} {
   check(esp_netif_init(), "network interface initialization");
 
@@ -17,9 +21,18 @@ wifi_station::wifi_station(event_loop&, nvs_access&) : interface{} {
 }
 
 void wifi_station::scan(wifi_scan_monitor& monitor) {
-  esp_wifi_scan_start(nullptr, true);
   auto stop_scan = [] { esp_wifi_clear_ap_list(); };
   auto stop_guard = make_guard(stop_scan);
+  check(esp_wifi_scan_start(nullptr, true), "WiFi scan");
+
+  wifi_ap_record_t record{};
+  while (true) {
+    const auto err = esp_wifi_scan_get_ap_record(&record);
+    if (err == ESP_FAIL) break;
+    check(err, "WiFi scan results");
+    monitor.add_result(
+        wifi_scan_result{reinterpret_cast<const char*>(record.ssid)});
+  }
 }
 
 wifi_station::~wifi_station() {
