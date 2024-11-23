@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "scan_console_visitor.h"
-#include "setup_interaction.h"
+#include "setup/setup.h"
 
 using namespace std;
 
@@ -44,8 +44,8 @@ void app::prepare_console_input() {
 void app::setup() {
   if (!usb_serial_jtag_is_connected()) return;
 
-  setup_interaction setup{};
   interaction_loop loop{};
+  ::setup setup{loop.stop(), station};
   loop.set(setup);
   loop.start();
 }

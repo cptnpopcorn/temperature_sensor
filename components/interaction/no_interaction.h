@@ -6,7 +6,7 @@
 class no_interaction final : public interaction {
  public:
   static no_interaction instance;
-  bool start(interaction_control& control) override;
+  void start(interaction_control& control) override;
 };
 
 #endif /* BC1286B0_E6FE_40A0_9F06_3DDC0193BB66 */

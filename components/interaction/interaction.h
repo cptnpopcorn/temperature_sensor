@@ -5,8 +5,7 @@ class interaction_control;
 
 class interaction {
  public:
-  virtual bool start(
-      interaction_control& control) = 0;  // if false, leave interaction loop
+  virtual void start(interaction_control&) = 0;
 
  protected:
   ~interaction() = default;
