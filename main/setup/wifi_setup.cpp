@@ -4,6 +4,9 @@
 
 #include <iostream>
 
+#include "ap_selection.h"
+#include "wifi_station.h"
+
 using namespace std;
 
 wifi_setup::wifi_setup(interaction &setup, wifi_station &station) noexcept
@@ -24,4 +27,10 @@ void wifi_setup::start(interaction_control &control) {
   }
 }
 
-void wifi_setup::select_ap() {}
+void wifi_setup::select_ap() {
+  cout << "scanning for access points..." << endl;
+  ap_selection selection{};
+  station.scan(selection);
+  selection.flush();
+  // TODO: configure the selected ssid, if any, for permanent use
+}

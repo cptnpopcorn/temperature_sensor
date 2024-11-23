@@ -26,9 +26,6 @@ void app::run() {
     cout << sensor.measure() << endl;
     cout.flush();
     vTaskDelay(4000 / portTICK_PERIOD_MS);
-    scan_console_visitor scanmon;
-    station.scan(scanmon);
-    vTaskDelay(4000 / portTICK_PERIOD_MS);
   }
 }
 
