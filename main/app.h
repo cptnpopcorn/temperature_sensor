@@ -14,6 +14,8 @@ class app final {
   void run();
 
  private:
+  void prepare_console_input();
+  void setup();
   event_loop evts;
   nvs_access nvs;
   sht sensor;
