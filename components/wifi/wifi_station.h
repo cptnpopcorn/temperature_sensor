@@ -1,7 +1,7 @@
 #ifndef D94EF760_09CE_4814_B482_B4C111DE38E6
 #define D94EF760_09CE_4814_B482_B4C111DE38E6
 
-#include "wifi_scan_monitor.h"
+#include "wifi_scan_visitor.h"
 
 class event_loop;
 class nvs_access;
@@ -15,7 +15,7 @@ class wifi_station final {
   wifi_station(const wifi_station&) = delete;
   wifi_station& operator=(const wifi_station&) = delete;
 
-  void scan(wifi_scan_monitor& monitor);
+  void scan(wifi_scan_visitor& monitor);
 
   ~wifi_station();
 

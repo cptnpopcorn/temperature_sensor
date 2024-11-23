@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#include "scan_console_monitor.h"
+#include "scan_console_visitor.h"
 #include "setup_interaction.h"
 
 using namespace std;
@@ -26,7 +26,7 @@ void app::run() {
     cout << sensor.measure() << endl;
     cout.flush();
     vTaskDelay(4000 / portTICK_PERIOD_MS);
-    scan_console_monitor scanmon;
+    scan_console_visitor scanmon;
     station.scan(scanmon);
     vTaskDelay(4000 / portTICK_PERIOD_MS);
   }
