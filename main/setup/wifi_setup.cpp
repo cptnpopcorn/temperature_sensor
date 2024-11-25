@@ -6,9 +6,11 @@
 
 #include "ap_selection.h"
 #include "console_input.h"
+#include "wifi_connection.h"
 #include "wifi_station.h"
 
 using namespace std;
+using namespace std::literals;
 
 wifi_setup::wifi_setup(interaction &setup, wifi_station &station) noexcept
     : setup{setup}, station{station} {}
@@ -17,6 +19,7 @@ void wifi_setup::start(interaction_control &control) {
   cout << "WiFi setup.." << endl;
   cout << "c - show current config" << endl;
   cout << "s - select access point" << endl;
+  cout << "t - test wifi connection" << endl;
   cout << "q - quit" << endl;
 
   switch (cin.get()) {
@@ -25,6 +28,9 @@ void wifi_setup::start(interaction_control &control) {
       return;
     case 's':
       select_ap();
+      return;
+    case 't':
+      test_connect();
       return;
     case 'q':
       control.set(setup);
@@ -57,4 +63,21 @@ void wifi_setup::select_ap() {
   cout << endl;
 
   station.set_config(config);
+}
+
+void wifi_setup::test_connect() {
+  cout << "connecting WiFi.." << endl;
+  wifi_connection connection{};
+
+  cout << "getting IP address.." << endl;
+  auto is_up = connection.is_up();
+  for ([[maybe_unused]] auto i = 10; i != 0; --i) {
+    if (is_up.wait_for(1s) == future_status::ready) {
+      cout << "address sucessfully assigned" << endl;
+      return;
+    }
+    cout << '.';
+    cout.flush();
+  }
+  cout << "timeout reached" << endl;
 }

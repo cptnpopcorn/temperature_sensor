@@ -13,6 +13,7 @@ class wifi_setup final : public interaction {
  private:
   void show_config();
   void select_ap();
+  void test_connect();
   interaction& setup;
   wifi_station& station;
 };

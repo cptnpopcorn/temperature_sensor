@@ -74,6 +74,9 @@
     "cinttypes": "cpp",
     "typeinfo": "cpp",
     "strstream": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "bitset": "cpp",
+    "regex": "cpp",
+    "ranges": "cpp"
   }
 }
