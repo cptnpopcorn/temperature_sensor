@@ -11,6 +11,7 @@ class wifi_setup final : public interaction {
   void start(interaction_control&);
 
  private:
+  void show_config();
   void select_ap();
   interaction& setup;
   wifi_station& station;

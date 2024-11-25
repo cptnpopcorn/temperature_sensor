@@ -1,2 +1,2 @@
-idf_component_register(SRCS
+idf_component_register(SRCS "console_input.cpp"
     INCLUDE_DIRS ".")
