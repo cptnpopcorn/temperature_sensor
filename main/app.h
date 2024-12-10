@@ -8,7 +8,8 @@
 
 class app final {
  public:
-  app(i2c_port_t port, gpio_num_t sda, gpio_num_t scl);
+  app(i2c_port_t port, gpio_num_t sda, gpio_num_t scl,
+      const char* ntp_server_name);
   app(const app&) = delete;
   app& operator=(const app&) = delete;
   void run();
@@ -20,5 +21,6 @@ class app final {
   nvs_access nvs;
   sht sensor;
   wifi_station station;
+  const char* const ntp_srv;
 };
 #endif /* B3C11C8D_4E28_41F5_956E_A7ABD223F8B3 */

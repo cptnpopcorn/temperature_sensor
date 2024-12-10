@@ -8,7 +8,7 @@ class wifi_station;
 class wifi_setup final : public interaction {
  public:
   wifi_setup(interaction&, wifi_station&) noexcept;
-  void start(interaction_control&);
+  void start(interaction_control&) override;
 
  private:
   void show_config();
