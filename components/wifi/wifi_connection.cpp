@@ -5,7 +5,7 @@
 
 using namespace std;
 
-wifi_connection::wifi_connection() {
+wifi_connection::wifi_connection(wifi_station& sta) : sta{sta} {
   wifi_event_handle =
       register_event(WIFI_EVENT, ESP_EVENT_ANY_ID, this,
                      BOUNCE(wifi_connection, handle_wifi_event));

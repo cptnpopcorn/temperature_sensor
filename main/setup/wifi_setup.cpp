@@ -13,7 +13,7 @@ using namespace std;
 using namespace std::literals;
 
 wifi_setup::wifi_setup(interaction &setup, wifi_station &station) noexcept
-    : setup{setup}, station{station} {}
+    : setup{setup}, sta{station} {}
 
 void wifi_setup::start(interaction_control &control) {
   cout << "WiFi setup.." << endl;
@@ -39,7 +39,7 @@ void wifi_setup::start(interaction_control &control) {
 }
 
 void wifi_setup::show_config() {
-  const auto config = station.get_config();
+  const auto config = sta.get_config();
   cout << "current WiFi is [" << config.ssid << "] with password ["
        << config.passwd << ']' << endl;
 }
@@ -47,7 +47,7 @@ void wifi_setup::show_config() {
 void wifi_setup::select_ap() {
   cout << "scanning for access points..." << endl;
   ap_selection selection{};
-  station.scan(selection);
+  sta.scan(selection);
   selection.flush();
 
   auto ssid = selection.get_selected_ssid();
@@ -57,17 +57,17 @@ void wifi_setup::select_ap() {
   }
 
   cout << "WiFi password: ";
-  auto config = station.get_config();
+  auto config = sta.get_config();
   config.ssid = ssid;
   config.passwd = console_read_line();
   cout << endl;
 
-  station.set_config(config);
+  sta.set_config(config);
 }
 
 void wifi_setup::test_connect() {
   cout << "connecting WiFi.." << endl;
-  wifi_connection connection{};
+  wifi_connection connection{sta};
 
   cout << "getting IP address.." << endl;
   auto is_up = connection.is_up();
