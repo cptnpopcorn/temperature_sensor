@@ -16,12 +16,13 @@ using namespace std;
 const char* const tag = "app";
 
 app::app(i2c_port_t port, gpio_num_t sda, gpio_num_t scl,
-         const char* ntp_server_name)
+         const char* ntp_server_name, buffer_t& measurements) noexcept
     : evts{},
       nvs{},
       sensor{port, sda, scl},
       station{evts, nvs},
-      ntp_srv{ntp_server_name} {}
+      ntp_srv{ntp_server_name},
+      measurements{measurements} {}
 
 void app::run() {
   prepare_console_input();
