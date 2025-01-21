@@ -25,6 +25,7 @@ void time_setup::start(interaction_control& control) {
     case 't':
       get_time();
       return;
+
     case 'q':
       control.set(setup);
       return;

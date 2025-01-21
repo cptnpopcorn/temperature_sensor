@@ -1,16 +1,16 @@
 #ifndef B3C11C8D_4E28_41F5_956E_A7ABD223F8B3
 #define B3C11C8D_4E28_41F5_956E_A7ABD223F8B3
 
-#include <compressed_measurement.h>
 #include <event_loop.h>
 #include <nvs_access.h>
-#include <ringbuffer.h>
 #include <sht.h>
 #include <wifi_station.h>
 
+#include "app_traits.h"
+
 class app final {
  public:
-  using buffer_t = ringbuffer<compressed_measurement, 512>;
+  using buffer_t = app_traits::buffer_t;
 
   app(i2c_port_t port, gpio_num_t sda, gpio_num_t scl,
       const char* ntp_server_name, buffer_t& measurements) noexcept;

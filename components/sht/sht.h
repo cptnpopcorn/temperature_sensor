@@ -8,7 +8,7 @@
 class sht final {
  public:
   sht(i2c_port_t port, gpio_num_t sda, gpio_num_t scl);
-  const measurement measure();
+  measurement measure();
 
  private:
   sht4x_t dev;

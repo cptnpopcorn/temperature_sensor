@@ -8,7 +8,7 @@ sht::sht(i2c_port_t port, gpio_num_t sda, gpio_num_t scl) : dev{} {
   check(sht4x_init(&dev), "SHT device init");
 }
 
-const measurement sht::measure() {
+measurement sht::measure() {
   measurement m{};
   check(sht4x_measure(&dev, &m.temperature, &m.humidity), "SHT measurement");
   return m;

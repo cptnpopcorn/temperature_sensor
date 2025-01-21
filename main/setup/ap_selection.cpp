@@ -59,6 +59,7 @@ void ap_selection::user_select(bool expect_more) {
       case 'm':
         if (expect_more) return;
         continue;
+
       case 'q':
         stop = true;
         return;

@@ -26,12 +26,15 @@ void wifi_setup::start(interaction_control &control) {
     case 'c':
       show_config();
       return;
+
     case 's':
       select_ap();
       return;
+
     case 't':
       test_connect();
       return;
+
     case 'q':
       control.set(setup);
       return;

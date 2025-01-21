@@ -15,15 +15,19 @@
 using namespace std;
 using namespace chrono;
 
-setup::setup(interaction& stop, wifi_station& station,
-             const char* ntp_srv) noexcept
-    : stop{stop}, wifi{*this, station}, time{*this, station, ntp_srv} {}
+setup::setup(interaction& stop, wifi_station& station, const char* ntp_srv,
+             app_traits::buffer_t& measurements, sht& sensor) noexcept
+    : stop{stop},
+      wifi{*this, station},
+      time{*this, station, ntp_srv},
+      measurements{*this, measurements, sensor} {}
 
 void setup::start(interaction_control& control) {
   constexpr auto sleep_duration = 10s;
   cout << "sensor setup.." << endl;
   cout << "w - WiFi" << endl;
   cout << "t - time" << endl;
+  cout << "m - mesaurements" << endl;
   cout << "s - sleep for " << sleep_duration << endl;
   cout << "q - quit" << endl;
 
@@ -31,13 +35,20 @@ void setup::start(interaction_control& control) {
     case 'w':
       control.set(wifi);
       return;
+
     case 't':
       control.set(time);
       return;
+
+    case 'm':
+      control.set(measurements);
+      return;
+
     case 's':
       check(esp_deep_sleep_try(microseconds{sleep_duration}.count()),
             "deep sleep with timer");
       return;
+
     case 'q':
       control.set(stop);
       return;

@@ -48,7 +48,7 @@ void app::setup() {
   if (!usb_serial_jtag_is_connected()) return;
 
   interaction_loop loop{};
-  ::setup setup{loop.stop(), station, ntp_srv};
+  ::setup setup{loop.stop(), station, ntp_srv, measurements, sensor};
   loop.set(setup);
   loop.start();
 }

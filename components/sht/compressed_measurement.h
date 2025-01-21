@@ -6,7 +6,7 @@
 
 class compressed_measurement final {
  public:
-  using time_t = std::chrono::time_point<std::chrono::system_clock>;
+  using time_t = std::chrono::system_clock::time_point;
 
   compressed_measurement() = default;
 

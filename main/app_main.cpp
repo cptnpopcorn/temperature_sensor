@@ -12,7 +12,7 @@ using namespace std;
 const char* const tag = "app";
 
 // cold boot assures zero-init, deep sleep will preserve content in RTC RAM
-RTC_NOINIT_ATTR uint8_t measurements[sizeof(app::buffer_t)];
+RTC_DATA_ATTR uint8_t measurements[sizeof(app::buffer_t)];
 
 extern "C" {
 void app_main(void) {
