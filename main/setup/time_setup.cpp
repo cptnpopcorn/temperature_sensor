@@ -43,7 +43,7 @@ void time_setup::get_time() {
       ntp_sync ntp{ntp_srv};
       auto is_synced = ntp.is_synchronized();
 
-      for ([[maybe_unused]] auto i = 0; i < 30; ++i) {
+      for ([[maybe_unused]] auto i = 0; i < 40; ++i) {
         if (is_synced.wait_for(1s) == future_status::ready) {
           const auto time = system_clock::now();
           cout << "time server contacted, current time is " << time << endl;

@@ -1,5 +1,7 @@
 #include <esp_log.h>
 
+#include <cstddef>
+#include <iostream>
 #include <stdexcept>
 
 #include "../config.h"
