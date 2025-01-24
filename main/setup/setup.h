@@ -3,7 +3,6 @@
 
 #include <interaction.h>
 
-#include "../app_traits.h"
 #include "measurements_setup.h"
 #include "time_setup.h"
 #include "wifi_setup.h"
@@ -11,7 +10,7 @@
 class setup final : public interaction {
  public:
   setup(interaction& stop, wifi_station& station, const char* ntp_srv,
-        app_traits::buffer_t& measurements, sht& sensor) noexcept;
+        measurement_traits::buffer_t& measurements, sht& sensor) noexcept;
 
   void start(interaction_control& control) override;
 
