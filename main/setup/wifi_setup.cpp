@@ -72,15 +72,15 @@ void wifi_setup::test_connect() {
   cout << "connecting WiFi.." << endl;
   wifi_connection connection{sta};
 
-  cout << "getting IP address.." << endl;
+  cout << "getting IP address";
   auto is_up = connection.is_up();
   for ([[maybe_unused]] auto i = 10; i != 0; --i) {
     if (is_up.wait_for(1s) == future_status::ready) {
-      cout << "address sucessfully assigned" << endl;
+      cout << endl << "address sucessfully assigned" << endl;
       return;
     }
     cout << '.';
     cout.flush();
   }
-  cout << "timeout reached" << endl;
+  cout << endl << "timeout reached" << endl;
 }

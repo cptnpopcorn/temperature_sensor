@@ -17,10 +17,9 @@ class event_handle final {
   ~event_handle();
 
  private:
-  bool is_set;
-  esp_event_base_t event_base;
-  int32_t event_id;
-  esp_event_handler_instance_t instance;
+  esp_event_base_t event_base{};
+  int32_t event_id{};
+  esp_event_handler_instance_t instance{};
 
   void swap(event_handle&) noexcept;
 };

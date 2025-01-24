@@ -6,10 +6,7 @@
 
 event_handle::event_handle(esp_event_base_t event_base, int32_t event_id,
                            esp_event_handler_instance_t instance) noexcept
-    : is_set{true},
-      event_base{event_base},
-      event_id{event_id},
-      instance{instance} {}
+    : event_base{event_base}, event_id{event_id}, instance{instance} {}
 
 event_handle::event_handle(event_handle &&other) noexcept { swap(other); }
 
@@ -20,13 +17,12 @@ event_handle &event_handle::operator=(event_handle &&other) noexcept {
 }
 
 event_handle::~event_handle() {
-  if (!is_set) return;
+  if (instance == nullptr) return;
   check(esp_event_handler_instance_unregister(event_base, event_id, instance),
         "unregister handle");
 }
 
 void event_handle::swap(event_handle &other) noexcept {
-  std::swap(is_set, other.is_set);
   std::swap(event_base, other.event_base);
   std::swap(event_id, other.event_id);
   std::swap(instance, other.instance);

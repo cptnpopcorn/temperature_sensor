@@ -1,24 +1,35 @@
 #include "measurements_setup.h"
 
 #include <interaction_control.h>
+#include <publisher.h>
 #include <sht.h>
+#include <wifi_connection.h>
 
 #include <chrono>
 #include <iostream>
+
+#include "../mqtt_config.h"
 
 using namespace std;
 using namespace std::chrono;
 
 measurements_setup::measurements_setup(interaction& setup,
-                                       buffer_t& measurements,
-                                       sht& sensor) noexcept
-    : setup{setup}, measurements{measurements}, sensor{sensor} {}
+                                       buffer_t& measurements, sht& sensor,
+                                       const mqtt_config& mqtt,
+                                       wifi_station& wifi) noexcept
+    : setup{setup},
+      measurements{measurements},
+      sensor{sensor},
+      mqtt{mqtt},
+      sta{wifi} {}
 
 void measurements_setup::start(interaction_control& control) {
   cout << "Measurements setup (" << measurements.size()
        << " measurements present).." << endl;
   cout << "l - list measurements" << endl;
   cout << "a - add measurement now" << endl;
+  cout << "m - show mqtt config" << endl;
+  cout << "p - publish measurements" << endl;
   cout << "q - quit" << endl;
 
   switch (cin.get()) {
@@ -37,8 +48,54 @@ void measurements_setup::start(interaction_control& control) {
     }
       return;
 
+    case 'm':
+      cout << "broker URI: " << mqtt.server_uri << endl;
+      cout << "topic root: " << mqtt.topic_root << endl;
+      return;
+
+    case 'p':
+      publish_measurements();
+      return;
+
     case 'q':
       control.set(setup);
       return;
   }
+}
+
+void measurements_setup::publish_measurements() {
+  cout << "connecting WiFi";
+  wifi_connection connection{sta};
+
+  auto is_wifi_up = connection.is_up();
+  for ([[maybe_unused]] auto i = 10; i != 0; --i) {
+    if (is_wifi_up.wait_for(1s) == future_status::ready) {
+      cout << endl << "WiFi connected" << endl;
+      const auto topic = mqtt.topic_root + "/setup";
+      cout << "connecting to MQTT broker for topic " << topic;
+      publisher pub{mqtt.server_uri, topic};
+
+      auto is_mqtt_connected = pub.is_connected();
+      for ([[maybe_unused]] auto j = 10; j != 0; --j) {
+        if (is_mqtt_connected.wait_for(1s) == future_status::ready) {
+          cout << endl << "MQTT connected" << endl;
+          cout << "Publishing stored measurements" << endl;
+          for (const auto& m : measurements) {
+            if (!pub.publish(m)) {
+              cout << "error while publishing" << endl;
+              return;
+            }
+          }
+          return;
+        }
+        cout << '.';
+        cout.flush();
+      }
+      cout << endl << "MQTT connection timeout reached" << endl;
+      return;
+    }
+    cout << '.';
+    cout.flush();
+  }
+  cout << endl << "WiFi connection timeout reached" << endl;
 }

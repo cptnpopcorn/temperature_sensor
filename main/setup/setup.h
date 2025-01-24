@@ -7,10 +7,13 @@
 #include "time_setup.h"
 #include "wifi_setup.h"
 
+class mqtt_config;
+
 class setup final : public interaction {
  public:
   setup(interaction& stop, wifi_station& station, const char* ntp_srv,
-        measurement_traits::buffer_t& measurements, sht& sensor) noexcept;
+        measurement_traits::buffer_t& measurements, sht& sensor,
+        const mqtt_config& mqtt) noexcept;
 
   void start(interaction_control& control) override;
 

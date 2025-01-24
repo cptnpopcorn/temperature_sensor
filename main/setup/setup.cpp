@@ -16,11 +16,12 @@ using namespace std;
 using namespace chrono;
 
 setup::setup(interaction& stop, wifi_station& station, const char* ntp_srv,
-             measurement_traits::buffer_t& measurements, sht& sensor) noexcept
+             measurement_traits::buffer_t& measurements, sht& sensor,
+             const mqtt_config& mqtt) noexcept
     : stop{stop},
       wifi{*this, station},
       time{*this, station, ntp_srv},
-      measurements{*this, measurements, sensor} {}
+      measurements{*this, measurements, sensor, mqtt, station} {}
 
 void setup::start(interaction_control& control) {
   constexpr auto sleep_duration = 10s;

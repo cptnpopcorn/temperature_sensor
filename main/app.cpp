@@ -16,13 +16,15 @@ using namespace std;
 const char* const tag = "app";
 
 app::app(i2c_port_t port, gpio_num_t sda, gpio_num_t scl,
-         const char* ntp_server_name, buffer_t& measurements) noexcept
+         const char* ntp_server_name, buffer_t& measurements,
+         const ::mqtt_config& mqtt) noexcept
     : evts{},
       nvs{},
       sensor{port, sda, scl},
       station{evts, nvs},
       ntp_srv{ntp_server_name},
-      measurements{measurements} {}
+      measurements{measurements},
+      mqtt{mqtt} {}
 
 void app::run() {
   prepare_console_input();
@@ -48,7 +50,7 @@ void app::setup() {
   if (!usb_serial_jtag_is_connected()) return;
 
   interaction_loop loop{};
-  ::setup setup{loop.stop(), station, ntp_srv, measurements, sensor};
+  ::setup setup{loop.stop(), station, ntp_srv, measurements, sensor, mqtt};
   loop.set(setup);
   loop.start();
 }
