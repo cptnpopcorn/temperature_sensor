@@ -8,10 +8,12 @@
 
 using namespace std;
 
-publisher::publisher(const std::string &broker_uri, const std::string &topic)
+publisher::publisher(const std::string &broker_host, const std::string &topic)
     : client{nullptr}, topic{topic} {
   esp_mqtt_client_config_t config{};
-  config.broker.address.uri = broker_uri.c_str();
+  config.broker.address.hostname = broker_host.c_str();
+  config.broker.address.port = 1883;
+  config.broker.address.transport = MQTT_TRANSPORT_OVER_TCP;
   client = esp_mqtt_client_init(&config);
   if (client == nullptr) throw runtime_error("MQTT client creation");
   event_handle = mqtt_register_event(client, MQTT_EVENT_ANY, this,

@@ -5,10 +5,10 @@
 
 class mqtt_config final {
  public:
-  mqtt_config(const std::string& server_uri,
+  mqtt_config(const std::string& broker_host,
               const std::string& topic_root) noexcept;
 
-  const std::string server_uri;
+  const std::string broker_host;
   const std::string topic_root;
 };
 

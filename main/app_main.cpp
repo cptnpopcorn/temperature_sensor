@@ -26,7 +26,7 @@ void app_main(void) {
         SCL_PIN,
         NTP_SRV,
         *reinterpret_cast<app::buffer_t*>(measurements),
-        mqtt_config{MQTT_BROKER_URI, MQTT_TOPIC_ROOT}}
+        mqtt_config{MQTT_BROKER_HOSTNAME, MQTT_TOPIC_ROOT}}
         .run();
   } catch (const exception& e) {
     ESP_LOGE(tag, "%s", e.what());

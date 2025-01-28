@@ -49,7 +49,7 @@ void measurements_setup::start(interaction_control& control) {
       return;
 
     case 'm':
-      cout << "broker URI: " << mqtt.server_uri << endl;
+      cout << "broker URI: " << mqtt.broker_host << endl;
       cout << "topic root: " << mqtt.topic_root << endl;
       return;
 
@@ -73,7 +73,7 @@ void measurements_setup::publish_measurements() {
       cout << endl << "WiFi connected" << endl;
       const auto topic = mqtt.topic_root + "/setup";
       cout << "connecting to MQTT broker for topic " << topic;
-      publisher pub{mqtt.server_uri, topic};
+      publisher pub{mqtt.broker_host, topic};
 
       auto is_mqtt_connected = pub.is_connected();
       for ([[maybe_unused]] auto j = 10; j != 0; --j) {

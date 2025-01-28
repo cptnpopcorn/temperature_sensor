@@ -1,5 +1,5 @@
 #include "mqtt_config.h"
 
-mqtt_config::mqtt_config(const std::string& server_uri,
+mqtt_config::mqtt_config(const std::string& broker_host,
                          const std::string& topic_root) noexcept
-    : server_uri{server_uri}, topic_root{topic_root} {}
+    : broker_host{broker_host}, topic_root{topic_root} {}
