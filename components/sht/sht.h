@@ -5,10 +5,13 @@
 
 #include "measurement.h"
 
+class sht_config;
+
 class sht final {
  public:
-  sht(i2c_port_t port, gpio_num_t sda, gpio_num_t scl);
+  sht(const sht_config&);
   measurement measure();
+  ~sht();
 
  private:
   sht4x_t dev;

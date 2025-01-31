@@ -21,9 +21,7 @@ void app_main(void) {
   ESP_LOGI(tag, "temperature sensor app starting...");
 
   try {
-    app{I2C_NUM_0,
-        SDA_PIN,
-        SCL_PIN,
+    app{{I2C_NUM_0, SDA_PIN, SCL_PIN},
         NTP_SRV,
         *reinterpret_cast<app::buffer_t*>(measurements),
         mqtt_config{MQTT_BROKER_HOSTNAME, MQTT_TOPIC_ROOT}}

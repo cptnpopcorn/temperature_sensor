@@ -14,12 +14,13 @@ using namespace std;
 using namespace std::chrono;
 
 measurements_setup::measurements_setup(interaction& setup,
-                                       buffer_t& measurements, sht& sensor,
+                                       buffer_t& measurements,
+                                       const sht_config& shtcfg,
                                        const mqtt_config& mqtt,
                                        wifi_station& wifi) noexcept
     : setup{setup},
       measurements{measurements},
-      sensor{sensor},
+      shtcfg{shtcfg},
       mqtt{mqtt},
       sta{wifi} {}
 
@@ -42,6 +43,7 @@ void measurements_setup::start(interaction_control& control) {
       return;
 
     case 'a': {
+      sht sensor{shtcfg};
       const auto m = sensor.measure();
       cout << "measured " << m << endl;
       measurements.write({system_clock::now(), m.temperature, m.humidity});
