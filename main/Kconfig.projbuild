@@ -1,0 +1,31 @@
+menu "Temperature sensor"
+    config SDA_PIN
+        int "I2C SDA pin number"
+        default 19
+        help
+            The ESP32 GPIO pin used to connect to the SHTs I2C SDA pin
+
+    config SCL_PIN
+        int "I2C SCL pin number"
+        default 20
+        help
+            The ESP32 GPIO pin used to connect to the SHTs I2C SCL pin
+
+    config NTP_SRV
+        string "NTP server hostname"
+        default "ch.pool.ntp.org"
+        help
+            Public NTP time server to synchronize the system time, for meaningful timestamping
+
+    config MQTT_BROKER_HOSTNAME
+        string "MQTT broker hostname"
+        default "test.mosquitto.org"
+        help
+            MQTT broker for published measurements
+
+    config MQTT_TOPIC_ROOT
+        string "MQTT root topic"
+        default "random237865235/tempsensor"
+        help
+            The prefix to the MQTT topic - can be extended using console setup
+endmenu

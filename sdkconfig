@@ -580,6 +580,16 @@ CONFIG_PARTITION_TABLE_MD5=y
 # end of Partition Table
 
 #
+# Temperature sensor
+#
+CONFIG_SDA_PIN=19
+CONFIG_SCL_PIN=20
+CONFIG_NTP_SRV="ch.pool.ntp.org"
+CONFIG_MQTT_BROKER_HOSTNAME="test.mosquitto.org"
+CONFIG_MQTT_TOPIC_ROOT="random237865235/tempsensor"
+# end of Temperature sensor
+
+#
 # Compiler options
 #
 # CONFIG_COMPILER_OPTIMIZATION_DEBUG is not set

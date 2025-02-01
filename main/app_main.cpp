@@ -1,11 +1,11 @@
 #include <esp_log.h>
+#include <sdkconfig.h>
 
 #include <cstddef>
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
 
-#include "../config.h"
 #include "app.h"
 #include "mqtt_config.h"
 
@@ -21,10 +21,11 @@ void app_main(void) {
   ESP_LOGI(tag, "temperature sensor app starting...");
 
   try {
-    app{{I2C_NUM_0, SDA_PIN, SCL_PIN},
-        NTP_SRV,
+    app{{I2C_NUM_0, static_cast<gpio_num_t>(CONFIG_SDA_PIN),
+         static_cast<gpio_num_t>(CONFIG_SCL_PIN)},
+        CONFIG_NTP_SRV,
         *reinterpret_cast<app::buffer_t*>(measurements),
-        mqtt_config{MQTT_BROKER_HOSTNAME, MQTT_TOPIC_ROOT}}
+        mqtt_config{CONFIG_MQTT_BROKER_HOSTNAME, CONFIG_MQTT_TOPIC_ROOT}}
         .run();
   } catch (const exception& e) {
     ESP_LOGE(tag, "%s", e.what());

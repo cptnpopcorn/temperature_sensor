@@ -4,7 +4,7 @@ Takes measurements at long intervals, going do deep sleep meantime. At even long
 
 ## Configuration
 
-Since server names, security keys etc. are sensible, it's up to you to add them to the configuration. Just copy [config.example.h](config.example.h) to [config.h](config.h) and adjust it to your needs.
+All build-time settings are available through the ESP-IDF under the "Temperature Sensor" menu. (use [_menuconfig_](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/kconfig/project-configuration-guide.html#editing-the-configuration))
 
 ## Building
 
