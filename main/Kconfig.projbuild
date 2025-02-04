@@ -28,4 +28,10 @@ menu "Temperature sensor"
         default "random237865235/tempsensor"
         help
             The prefix to the MQTT topic - can be extended using console setup
+
+    config MQTT_USE_TLS
+        bool "MQTT use encryption (TLS)"
+        default false
+        help
+            Connect to broker using TLS. The public key file of the certificate authority (CA) that was used to sign the brokers public key needs to be present in main/security/ca.crt
 endmenu

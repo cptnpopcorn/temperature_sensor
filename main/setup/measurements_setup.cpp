@@ -75,7 +75,7 @@ void measurements_setup::publish_measurements() {
       cout << endl << "WiFi connected" << endl;
       const auto topic = mqtt.topic_root + "/setup";
       cout << "connecting to MQTT broker for topic " << topic;
-      publisher pub{mqtt.broker_host, topic};
+      publisher pub{mqtt.broker_host, topic, mqtt.ca_cert};
 
       auto is_mqtt_connected = pub.is_connected();
       for ([[maybe_unused]] auto j = 10; j != 0; --j) {
