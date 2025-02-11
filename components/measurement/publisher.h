@@ -16,7 +16,10 @@ class wifi_connection;
 class publisher final {
  public:
   publisher(const std::string& broker_host, const std::string& topic,
-            const std::span<const uint8_t>& ca_cert);
+            const std::span<const uint8_t>& ca_cert,
+            const std::span<const uint8_t>& client_cert,
+            const std::span<const uint8_t>& client_key);
+
   std::future<void> is_connected() noexcept;
   bool publish(const compressed_measurement&);
   ~publisher();

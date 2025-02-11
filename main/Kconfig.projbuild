@@ -34,4 +34,13 @@ menu "Temperature sensor"
         default false
         help
             Connect to broker using TLS. The public key file of the certificate authority (CA) that was used to sign the brokers public key needs to be present in main/security/ca.crt
+
+    if MQTT_USE_TLS
+    config MQTT_TLS_CLIENT_AUTH
+    depends on MQTT_USE_TLS
+    bool "MQTT use client authentication (TLS)"
+    default false
+    help
+        Authenticate this client against the broker. The client certificate needs to be present in main/security/client.crt, the key in main/security/client.key
+    endif
 endmenu
