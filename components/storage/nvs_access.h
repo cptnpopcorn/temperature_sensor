@@ -1,11 +1,18 @@
 #ifndef BFB57D3A_6315_4528_A10C_9AEC1F61A48A
 #define BFB57D3A_6315_4528_A10C_9AEC1F61A48A
 
-class nvs_access final {
- public:
-  nvs_access();
-  nvs_access(const nvs_access&) = delete;
-  nvs_access& operator=(const nvs_access&) = delete;
+#include <nvs_flash.h>
+
+class nvs_access final
+{
+  public:
+    nvs_access(const char *namespace_name);
+    nvs_access(const nvs_access &) = delete;
+    nvs_access &operator=(const nvs_access &) = delete;
+    ~nvs_access();
+
+  private:
+    nvs_handle_t handle;
 };
 
 #endif /* BFB57D3A_6315_4528_A10C_9AEC1F61A48A */

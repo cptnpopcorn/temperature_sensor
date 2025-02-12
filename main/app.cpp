@@ -20,7 +20,7 @@ const char *const tag = "app";
 app::app(const sht_config &shtcfg, const char *ntp_server_name, buffer_t &measurements,
          int default_measurement_interval_seconds, int default_synchronization_interval_seconds,
          const ::mqtt_config &mqtt) noexcept
-    : evts{}, nvs{}, shtcfg{shtcfg}, station{evts, nvs}, ntp_srv{ntp_server_name}, measurements{measurements},
+    : evts{}, nvs{"tempsens"}, shtcfg{shtcfg}, station{evts, nvs}, ntp_srv{ntp_server_name}, measurements{measurements},
       mqtt{mqtt}
 {
 }
