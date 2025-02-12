@@ -17,6 +17,18 @@ menu "Temperature sensor"
         help
             Public NTP time server to synchronize the system time, for meaningful timestamping
 
+    config MEASUREMENT_INTERVAL_SECONDS
+        int "Measurement interval (seconds)"
+        default 3600
+        help
+            Sleep time between reading the SHTs temperature and humidity and storing them to RTC RAM (ringbuffer of 512 entries)
+
+    config SYNCHRONIZATION_INTERVAL_SECONDS
+        int "Synchronization interval (seconds)"
+        default 86400
+        help
+            Minimum interval before reporting stored measurements via MQTT and re-synchronizing the RTC clock (from NTP server)
+
     config MQTT_BROKER_HOSTNAME
         string "MQTT broker hostname"
         default "test.mosquitto.org"
