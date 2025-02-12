@@ -2,6 +2,7 @@
 #define BFB57D3A_6315_4528_A10C_9AEC1F61A48A
 
 #include <nvs_flash.h>
+#include <string>
 
 class nvs_access final
 {
@@ -9,6 +10,9 @@ class nvs_access final
     nvs_access(const char *namespace_name);
     nvs_access(const nvs_access &) = delete;
     nvs_access &operator=(const nvs_access &) = delete;
+
+    std::string get_str(const char *key, const char *default);
+
     ~nvs_access();
 
   private:
