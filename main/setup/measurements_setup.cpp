@@ -1,6 +1,8 @@
 #include "measurements_setup.h"
 
+#include <console_input.h>
 #include <interaction_control.h>
+#include <nvs_access.h>
 #include <publisher.h>
 #include <sht.h>
 #include <time_formatter.h>
@@ -8,23 +10,37 @@
 
 #include <chrono>
 #include <iostream>
+#include <string>
 
+#include "../app_storage.h"
 #include "../mqtt_config.h"
 
 using namespace std;
 using namespace std::chrono;
 
 measurements_setup::measurements_setup(interaction &setup, buffer_t &measurements, const sht_config &shtcfg,
-                                       const mqtt_config &mqtt, wifi_station &wifi) noexcept
-    : setup{setup}, measurements{measurements}, shtcfg{shtcfg}, mqtt{mqtt}, sta{wifi}
+                                       nvs_access &nvs, const mqtt_config &mqtt, wifi_station &wifi) noexcept
+    : setup{setup}, measurements{measurements}, shtcfg{shtcfg}, nvs{nvs}, mqtt{mqtt}, sta{wifi}
 {
+}
+
+const string undefined{"!undefined!"};
+
+const string &empty_as_undefined(const string &value)
+{
+    return value.length() == 0 ? undefined : value;
 }
 
 void measurements_setup::start(interaction_control &control)
 {
-    cout << "Measurements setup (" << measurements.size() << " measurements present).." << endl;
+    const auto topic = nvs.get_str(app_storage::mqtt_topic_key);
+
+    cout << "Measurements setup (" << measurements.size() << " measurements present) for topic '"
+         << empty_as_undefined(topic) << "'.." << endl;
+
     cout << "l - list measurements" << endl;
     cout << "a - add measurement now" << endl;
+    cout << "t - set mqtt topic" << endl;
     cout << "m - show mqtt config" << endl;
     cout << "p - publish measurements" << endl;
     cout << "q - quit" << endl;
@@ -46,6 +62,24 @@ void measurements_setup::start(interaction_control &control)
         measurements.write({system_clock::now(), m.temperature, m.humidity});
     }
         return;
+
+    case 't': {
+        cout << "enter new topic: ";
+        const auto new_topic = console_read_line();
+        cout << endl;
+        if (new_topic.length() == 0)
+        {
+            cout << "empty input -> topic left unchanged" << endl;
+            return;
+        }
+        if (new_topic == topic)
+        {
+            cout << "topic identical -> topic left unchanged" << endl;
+            return;
+        }
+        nvs.set_str(app_storage::mqtt_topic_key, new_topic);
+        return;
+    }
 
     case 'm':
         cout << "broker URI: " << mqtt.broker_host << endl;
@@ -73,7 +107,7 @@ void measurements_setup::publish_measurements()
         if (is_wifi_up.wait_for(1s) == future_status::ready)
         {
             cout << endl << "WiFi connected" << endl;
-            const auto topic = mqtt.topic_root + "/setup";
+            const auto topic = "setup/" + mqtt.topic_root + '/' + nvs.get_str(app_storage::mqtt_topic_key);
             cout << "connecting to MQTT broker " << mqtt.broker_host << " for topic " << topic;
 
             publisher pub{mqtt.broker_host, topic, mqtt.ca_cert, mqtt.client_cert, mqtt.client_key};

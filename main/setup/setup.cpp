@@ -16,9 +16,9 @@ using namespace std;
 using namespace chrono;
 
 setup::setup(interaction &stop, wifi_station &station, const char *ntp_srv, measurement_traits::buffer_t &measurements,
-             const sht_config &shtcfg, const mqtt_config &mqtt) noexcept
+             const sht_config &shtcfg, nvs_access &nvs, const mqtt_config &mqtt) noexcept
     : stop{stop}, wifi{*this, station}, time{*this, station, ntp_srv},
-      measurements{*this, measurements, shtcfg, mqtt, station}
+      measurements{*this, measurements, shtcfg, nvs, mqtt, station}
 {
 }
 

@@ -10,15 +10,15 @@ nvs_access::nvs_access(const char *namespace_name) : handle{}
     check(nvs_open(namespace_name, NVS_READWRITE, &handle));
 }
 
-std::string nvs_access::get_str(const char *key, const char *default_value)
+std::string nvs_access::get_str(const char *key)
 {
-    size_t length;
+    size_t length{};
     const auto length_result = nvs_get_blob(handle, key, nullptr, &length);
     switch (length_result)
     {
     case ESP_OK: {
         string value(length, '\0');
-        nvs_get_blob(handle, key, &value.at(0), &length);
+        nvs_get_blob(handle, key, value.data(), &length);
         return value;
     }
 
@@ -29,6 +29,11 @@ std::string nvs_access::get_str(const char *key, const char *default_value)
         check(length_result);
         return {};
     }
+}
+
+void nvs_access::set_str(const char *key, const std::string &value)
+{
+    check(nvs_set_blob(handle, key, value.data(), value.size()), "write NVS blob");
 }
 
 nvs_access::~nvs_access()

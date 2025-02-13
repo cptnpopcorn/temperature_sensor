@@ -45,7 +45,7 @@ void app::setup()
 {
     prepare_console_input();
     interaction_loop loop{};
-    ::setup setup{loop.stop(), station, ntp_srv, measurements, shtcfg, mqtt};
+    ::setup setup{loop.stop(), station, ntp_srv, measurements, shtcfg, nvs, mqtt};
     loop.set(setup);
     loop.start();
 }

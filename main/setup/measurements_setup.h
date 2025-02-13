@@ -5,6 +5,7 @@
 #include <measurement_traits.h>
 
 class mqtt_config;
+class nvs_access;
 class sht_config;
 class wifi_station;
 
@@ -13,8 +14,8 @@ class measurements_setup : public interaction
   public:
     using buffer_t = measurement_traits::buffer_t;
 
-    measurements_setup(interaction &setup, buffer_t &measurements, const sht_config &shtcfg, const mqtt_config &mqtt,
-                       wifi_station &station) noexcept;
+    measurements_setup(interaction &setup, buffer_t &measurements, const sht_config &shtcfg, nvs_access &nvs,
+                       const mqtt_config &mqtt, wifi_station &station) noexcept;
 
     void start(interaction_control &) override;
 
@@ -23,6 +24,7 @@ class measurements_setup : public interaction
     interaction &setup;
     buffer_t &measurements;
     const sht_config &shtcfg;
+    nvs_access &nvs;
     const mqtt_config &mqtt;
     wifi_station &sta;
 };

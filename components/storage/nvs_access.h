@@ -11,7 +11,8 @@ class nvs_access final
     nvs_access(const nvs_access &) = delete;
     nvs_access &operator=(const nvs_access &) = delete;
 
-    std::string get_str(const char *key, const char *default);
+    std::string get_str(const char *key);
+    void set_str(const char *key, const std::string &value);
 
     ~nvs_access();
 
