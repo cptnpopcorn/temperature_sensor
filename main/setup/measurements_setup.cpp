@@ -34,15 +34,23 @@ const string &empty_as_undefined(const string &value)
 void measurements_setup::start(interaction_control &control)
 {
     const auto topic = nvs.get_str(app_storage::mqtt_topic_key);
+    const hh_mm_ss<seconds> measurement_interval{
+        static_cast<seconds>(nvs.get_uint32(app_storage::measurement_interval_key))};
+
+    const hh_mm_ss<seconds> synchronization_interval{
+        static_cast<seconds>(nvs.get_uint32(app_storage::synchronization_interval_key))};
 
     cout << "Measurements setup (" << measurements.size() << " measurements present) for topic '"
-         << empty_as_undefined(topic) << "'.." << endl;
+         << empty_as_undefined(topic) << "', sampled every " << measurement_interval << ", published every "
+         << synchronization_interval << ".." << endl;
 
     cout << "l - list measurements" << endl;
     cout << "a - add measurement now" << endl;
     cout << "t - set mqtt topic" << endl;
     cout << "m - show mqtt config" << endl;
     cout << "p - publish measurements" << endl;
+    cout << "i - set measurement interval" << endl;
+    cout << "s - set synchronization interval" << endl;
     cout << "q - quit" << endl;
 
     switch (cin.get())
@@ -60,8 +68,8 @@ void measurements_setup::start(interaction_control &control)
         const auto m = sensor.measure();
         cout << "measured " << m << endl;
         measurements.write({system_clock::now(), m.temperature, m.humidity});
-    }
         return;
+    }
 
     case 't': {
         cout << "enter new topic: ";
@@ -69,12 +77,12 @@ void measurements_setup::start(interaction_control &control)
         cout << endl;
         if (new_topic.length() == 0)
         {
-            cout << "empty input -> topic left unchanged" << endl;
+            cout << "empty input -> no change" << endl;
             return;
         }
         if (new_topic == topic)
         {
-            cout << "topic identical -> topic left unchanged" << endl;
+            cout << "topic identical -> no change" << endl;
             return;
         }
         nvs.set_str(app_storage::mqtt_topic_key, new_topic);
@@ -89,6 +97,42 @@ void measurements_setup::start(interaction_control &control)
     case 'p':
         publish_measurements();
         return;
+
+    case 'i': {
+        cout << "enter new measurement interval in seconds: ";
+        const auto [valid, seconds] = console_read_uint32();
+        cout << endl;
+        if (!valid)
+        {
+            cout << "not a valid number of seconds" << endl;
+            return;
+        }
+        if (seconds == nvs.get_uint32(app_storage::measurement_interval_key))
+        {
+            cout << "interval identical - no change" << endl;
+            return;
+        }
+        nvs.set_uint32(app_storage::measurement_interval_key, seconds);
+        return;
+    }
+
+    case 's': {
+        cout << "enter new synchronization interval in seconds: ";
+        const auto [valid, seconds] = console_read_uint32();
+        cout << endl;
+        if (!valid)
+        {
+            cout << "not a valid number of seconds" << endl;
+            return;
+        }
+        if (seconds == nvs.get_uint32(app_storage::synchronization_interval_key))
+        {
+            cout << "interval identical - no change" << endl;
+            return;
+        }
+        nvs.set_uint32(app_storage::synchronization_interval_key, seconds);
+        return;
+    }
 
     case 'q':
         control.set(setup);

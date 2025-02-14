@@ -4,9 +4,11 @@
 #include <cstddef>
 #include <cstring>
 #include <iostream>
+#include <nvs_access.h>
 #include <stdexcept>
 
 #include "app.h"
+#include "app_storage.h"
 #include "mqtt_config.h"
 
 using namespace std;
@@ -68,11 +70,22 @@ extern "C"
 
         try
         {
+            nvs_access nvs{"tempsens"};
+
+            if (nvs.get_uint32(app_storage::measurement_interval_key) == 0u)
+            {
+                nvs.set_uint32(app_storage::measurement_interval_key, CONFIG_MEASUREMENT_INTERVAL_SECONDS);
+            }
+
+            if (nvs.get_uint32(app_storage::synchronization_interval_key) == 0u)
+            {
+                nvs.set_uint32(app_storage::synchronization_interval_key, CONFIG_SYNCHRONIZATION_INTERVAL_SECONDS);
+            }
+
             app{{I2C_NUM_0, static_cast<gpio_num_t>(CONFIG_SDA_PIN), static_cast<gpio_num_t>(CONFIG_SCL_PIN)},
                 CONFIG_NTP_SRV,
                 *reinterpret_cast<app::buffer_t *>(measurements),
-                CONFIG_MEASUREMENT_INTERVAL_SECONDS,
-                CONFIG_SYNCHRONIZATION_INTERVAL_SECONDS,
+                nvs,
                 mqtt_config{CONFIG_MQTT_BROKER_HOSTNAME, CONFIG_MQTT_TOPIC_ROOT, get_ca_crt(), get_client_crt(),
                             get_client_key()}}
                 .run();
