@@ -2,31 +2,58 @@
 
 #include <bounce.h>
 #include <error.h>
-#include <esp_netif_sntp.h>
-#include <esp_sntp.h>
+#include <iostream>
+#include <lwip/dns.h>
 
 using namespace std;
 
-ntp_sync* instance{};
-
-ntp_sync::ntp_sync(const char* ntp_server_name) {
-  esp_sntp_config_t config = ESP_NETIF_SNTP_DEFAULT_CONFIG(ntp_server_name);
-  config.start = true;
-  config.smooth_sync = false;
-  config.sync_cb = bounce_synchronized;
-  check(esp_netif_sntp_init(&config), "NTP init");
-  instance = this;
+ntp_sync::ntp_sync(const char *ntp_server_name)
+{
+    lookup_ntp_host(ntp_server_name);
 }
 
-void ntp_sync::bounce_synchronized(timeval* tv) {
-  if (instance != nullptr) instance->synchronized(tv);
+void ntp_sync::lookup_ntp_host(const char *host)
+{
+    ip_addr_t addr{};
+
+    const auto dns_result = dns_gethostbyname(
+        host, &addr,
+        [](const char *name, const ip_addr_t *ipaddr, void *callback_arg) {
+            (reinterpret_cast<ntp_sync *>(callback_arg))->dns_found(name, ipaddr);
+        },
+        this);
+
+    switch (dns_result)
+    {
+    case ERR_OK:
+        dns_found(host, &addr);
+        return;
+
+    case ERR_INPROGRESS:
+        return;
+
+    default:
+        check(dns_result, "lookup NTP host");
+        return;
+    }
 }
 
-void ntp_sync::synchronized(timeval* tv) { up.set_value(); }
+void ntp_sync::dns_found(const char *name, const ip_addr_t *ipaddr)
+{
+    cout << "NTP host resolved as " << hex << lwip_ntohl(ipaddr->u_addr.ip4.addr) << endl;
+    cout.flush();
+}
 
-future<void> ntp_sync::is_synchronized() { return up.get_future(); }
+void ntp_sync::synchronized(timeval *tv)
+{
+    up.set_value();
+}
 
-ntp_sync::~ntp_sync() {
-  esp_netif_sntp_deinit();
-  instance = {};
+future<void> ntp_sync::is_synchronized()
+{
+    return up.get_future();
+}
+
+ntp_sync::~ntp_sync()
+{
 }

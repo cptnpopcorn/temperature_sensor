@@ -3,22 +3,25 @@
 
 #include <cstddef>
 #include <future>
+#include <lwip/ip_addr.h>
 
 struct timeval;
 
-class ntp_sync final {
- public:
-  ntp_sync(const char *ntp_server_name);
-  ntp_sync(const ntp_sync &) = delete;
-  ntp_sync &operator=(const ntp_sync &) = delete;
-  std::future<void> is_synchronized();
-  ~ntp_sync();
+class ntp_sync final
+{
+  public:
+    ntp_sync(const char *ntp_server_name);
+    ntp_sync(const ntp_sync &) = delete;
+    ntp_sync &operator=(const ntp_sync &) = delete;
+    std::future<void> is_synchronized();
+    ~ntp_sync();
 
- private:
-  void synchronized(timeval *tv);
-  static void bounce_synchronized(timeval *tv);
+  private:
+    void lookup_ntp_host(const char *host);
+    void dns_found(const char *name, const ip_addr_t *ipaddr);
+    void synchronized(timeval *tv);
 
-  std::promise<void> up;
+    std::promise<void> up;
 };
 
 #endif /* B8807F32_534D_46EE_81AD_65EF7EACB1D0 */
