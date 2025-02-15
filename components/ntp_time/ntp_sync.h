@@ -6,6 +6,7 @@
 #include <lwip/ip_addr.h>
 
 struct timeval;
+struct udp_pcb;
 
 class ntp_sync final
 {
@@ -21,6 +22,7 @@ class ntp_sync final
     void dns_found(const char *name, const ip_addr_t *ipaddr);
     void synchronized(timeval *tv);
 
+    udp_pcb *ctrl;
     std::promise<void> up;
 };
 

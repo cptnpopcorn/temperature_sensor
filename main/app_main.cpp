@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstring>
 #include <iostream>
+#include <lwip/udp.h>
 #include <nvs_access.h>
 #include <stdexcept>
 
@@ -81,6 +82,9 @@ extern "C"
             {
                 nvs.set_uint32(app_storage::synchronization_interval_key, CONFIG_SYNCHRONIZATION_INTERVAL_SECONDS);
             }
+
+            pbuf_init();
+            udp_init();
 
             app{{I2C_NUM_0, static_cast<gpio_num_t>(CONFIG_SDA_PIN), static_cast<gpio_num_t>(CONFIG_SCL_PIN)},
                 CONFIG_NTP_SRV,
