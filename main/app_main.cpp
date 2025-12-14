@@ -82,12 +82,14 @@ extern "C"
                 nvs.set_uint32(app_storage::synchronization_interval_key, CONFIG_SYNCHRONIZATION_INTERVAL_SECONDS);
             }
 
+			const string mqtt_broker_hostname{CONFIG_MQTT_BROKER_HOSTNAME};
+			const string mqtt_topic_root{CONFIG_MQTT_TOPIC_ROOT};
+
             app{{I2C_NUM_0, static_cast<gpio_num_t>(CONFIG_SDA_PIN), static_cast<gpio_num_t>(CONFIG_SCL_PIN)},
                 CONFIG_NTP_SRV,
                 *reinterpret_cast<app::buffer_t *>(measurements),
                 nvs,
-                mqtt_config{CONFIG_MQTT_BROKER_HOSTNAME, CONFIG_MQTT_TOPIC_ROOT, get_ca_crt(), get_client_crt(),
-                            get_client_key()}}
+                mqtt_config{mqtt_broker_hostname, mqtt_topic_root, get_ca_crt(), get_client_crt(), get_client_key()}}
                 .run();
         }
         catch (const exception &e)
